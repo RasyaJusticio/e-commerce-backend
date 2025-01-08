@@ -28,7 +28,7 @@ class AuthController extends Controller
             'jwt_token',
             $token,
             120,
-            '/',
+            null,
             null,
             false,
             true
@@ -60,10 +60,20 @@ class AuthController extends Controller
             'jwt_token',
             $token,
             120,
-            '/',
+            null,
             null,
             false,
             true
         );
+    }
+
+    public function logout()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ]);
     }
 }
