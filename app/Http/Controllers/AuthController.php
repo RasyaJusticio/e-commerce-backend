@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -16,14 +18,14 @@ class AuthController extends Controller
         $user = User::create([
             'name' => ucfirst(explode('@', $validatedData['email'])[0]),
             'email' => $validatedData['email'],
-            'password' => $validatedData['password'],
+            'password' => $validatedData['password']
         ]);
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'status' => 'success',
-            'data' => null,
+            'data' => null
         ])->cookie(
             'jwt_token',
             $token,
@@ -39,23 +41,26 @@ class AuthController extends Controller
     {
         $validatedData = $request->validated();
 
-        if (! $token = JWTAuth::attempt($validatedData)) {
+        $user = User::query()
+            ->where(['email' => $validatedData['email']])
+            ->first();
+
+        if (!$user || !Hash::check($validatedData['password'], $user->password)) {
             return response()->json([
                 'status' => 'fail',
                 'data' => [
                     'errors' => [
-                        'message' => 'Email or password is incorrect',
-                    ],
-                ],
-            ], 401);
+                        'message' => 'Email or password is incorrect'
+                    ]
+                ]
+            ]);
         }
 
-        // $user = JWTAuth::toUser($token);
-        // $token = JWTAuth::claims(['role' => $user->role])->fromUser($user);
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'status' => 'success',
-            'data' => null,
+            'data' => null
         ])->cookie(
             'jwt_token',
             $token,
