@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        $cookie = cookie('access_token', $token, 60 * 24 * 3, null, null, false, true);
+        $cookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
 
         return $this->jsend_success(null, 201)->cookie($cookie);
     }
@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         $token = Auth::user()->createToken('auth_token')->accessToken;
 
-        $cookie = cookie('access_token', $token, 60 * 24 * 3, null, null, false, true);
+        $cookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
 
         return $this->jsend_success(null, 200)->cookie($cookie);
     }
