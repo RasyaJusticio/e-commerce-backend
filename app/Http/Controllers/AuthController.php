@@ -47,4 +47,20 @@ class AuthController extends Controller
 
         return $this->jsend_success(null, 200)->cookie($cookie);
     }
+
+    public function logout()
+    {
+        Auth::user()->token()->revoke();
+
+        return $this->jsend_success(null, 200)->withoutCookie('access_token');
+    }
+
+    public function logoutAll()
+    {
+        Auth::user()->tokens()->each(function ($token) {
+            $token->revoke();
+        });
+
+        return $this->jsend_success(null, 200)->withoutCookie('access_token');
+    }
 }
