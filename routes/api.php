@@ -23,5 +23,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api']], function (
     Route::group(['prefix' => 'categories', 'controller' => AdminCategoryController::class], function () {
         Route::get('', 'index');
         Route::post('', 'store');
+
+        Route::group(['prefix' => '{category}'], function () {
+            Route::get('', 'show');
+        });
     });
 });
