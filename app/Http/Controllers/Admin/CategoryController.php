@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\CategoryIndexRequest;
+use App\Http\Requests\Admin\Category\CategoryStoreRequest;
 use App\Models\Category;
 use App\Traits\JSendResponse;
 use Illuminate\Http\Request;
@@ -54,9 +55,15 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+
+        $category = Category::create($validatedData);
+
+        return $this->jsend_success([
+            'category' => $category
+        ], 201);
     }
 
     /**
