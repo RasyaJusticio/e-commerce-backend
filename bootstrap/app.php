@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Middleware\AttachTokenFromCookie;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use App\Http\Middleware\AttachTokenFromCookie;
+use App\Http\Middleware\AdminOnly;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append([
             AttachTokenFromCookie::class,
+        ]);
+
+        $middleware->alias([
+            'admin-only' => AdminOnly::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
