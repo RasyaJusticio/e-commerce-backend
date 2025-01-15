@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Traits\JSendResponse;
 use Illuminate\Http\JsonResponse;
