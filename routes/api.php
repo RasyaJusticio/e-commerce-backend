@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +22,10 @@ Route::group(['prefix' => 'auth', 'controller' => AuthController::class], functi
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api', 'admin-only']], function () {
+    Route::group(['prefix' => 'products', 'controller' => AdminProductController::class], function () {
+        Route::get('', 'index');
+    });
+
     Route::group(['prefix' => 'categories', 'controller' => AdminCategoryController::class], function () {
         Route::get('', 'index');
         Route::post('', 'store');
