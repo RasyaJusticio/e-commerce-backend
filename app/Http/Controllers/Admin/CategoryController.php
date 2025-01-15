@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\CategoryIndexRequest;
 use App\Http\Requests\Admin\Category\CategoryStoreRequest;
+use App\Http\Requests\Admin\Category\CategoryUpdateRequest;
 use App\Models\Category;
 use App\Traits\JSendResponse;
 use Illuminate\Http\Request;
@@ -79,9 +80,15 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
-        //
+        $validatedData = $request->validated();
+
+        $category->update($validatedData);
+
+        return $this->jsend_success([
+            'category' => $category
+        ]);
     }
 
     /**
