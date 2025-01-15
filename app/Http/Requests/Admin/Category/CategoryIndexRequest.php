@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Admin\Category;
 
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends BaseFormRequest
+class CategoryIndexRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +22,12 @@ class RegisterRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'unique:users,email'],
-            'password' => [
-                'required',
-                'string',
-                Password::min(6)->letters()->mixedCase()->numbers(),
-            ],
+            'page' => ['integer', 'min:1'],
+            'per_page' => ['integer', 'min:1'],
+            'sort_by' => ['string', 'in:id,name,created_at,updated_at'],
+            'sort_order' => ['string', 'in:asc,desc'],
+            'filter' => ['array'],
+            'filter.*' => ['string'],
         ];
     }
 }
