@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Admin\Category;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class CategoryUpdateRequest extends FormRequest
+class CategoryUpdateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
