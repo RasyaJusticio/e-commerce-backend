@@ -18,4 +18,13 @@ class QueryProcessor
             ->offset(($page - 1) * $per_page)
             ->limit($per_page);
     }
+
+    public function sort($query, $sort_by = 'id', $sort_order = 'asc')
+    {
+        if (strtolower($sort_order) !== 'asc' && strtolower($sort_order) !== 'desc') {
+            $sort_order = 'asc';
+        }
+
+        return $query->orderBy($sort_by, $sort_order);
+    }
 }
