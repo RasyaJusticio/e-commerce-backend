@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\Product\ProductIndexRequest;
 use App\Http\Requests\Admin\Product\ProductStoreRequest;
+use App\Http\Requests\Admin\Product\ProductUpdateRequest;
 use App\Services\QueryProcessor;
 use App\Traits\JSendResponse;
 use Illuminate\Support\Str;
@@ -80,9 +81,15 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        //
+        $validatedData = $request->validated();
+
+        $product->update($validatedData);
+
+        return $this->jsend_success([
+            'product' => $product
+        ]);
     }
 
     /**
