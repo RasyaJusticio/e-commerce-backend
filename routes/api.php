@@ -29,6 +29,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api', 'admin-only'
         Route::group(['prefix' => '{product}'], function () {
             Route::get('', 'show');
             Route::put('', 'update');
+            Route::delete('', 'destroy');
         });
     });
 
