@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\Product\ProductIndexRequest;
+use App\Http\Requests\Admin\Product\ProductStoreRequest;
 use App\Services\QueryProcessor;
 use App\Traits\JSendResponse;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -48,9 +50,21 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+
+        $product = Product::create([
+            'name' => $validatedData['name'],
+            'slug' => $validatedData['slug'] ?? Str::slug($validatedData['name']),
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+            'stock' => $validatedData['stock'] ?? 0,
+        ]);
+
+        return $this->jsend_success([
+            'product' => $product
+        ], 201);
     }
 
     /**
