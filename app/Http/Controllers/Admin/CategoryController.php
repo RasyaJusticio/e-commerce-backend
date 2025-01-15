@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Traits\JSendResponse;
+use App\Services\QueryProcessor;
 use App\Http\Requests\Admin\Category\CategoryIndexRequest;
 use App\Http\Requests\Admin\Category\CategoryStoreRequest;
 use App\Http\Requests\Admin\Category\CategoryUpdateRequest;
-use App\Models\Category;
-use App\Traits\JSendResponse;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -20,6 +20,7 @@ class CategoryController extends Controller
     public function index(CategoryIndexRequest $request)
     {
         $validatedData = $request->validated();
+        $queryProcessor = app(QueryProcessor::class);
 
         $page = $validatedData['page'] ?? 1;
         $per_page = $validatedData['per_page'] ?? 10;
@@ -29,17 +30,9 @@ class CategoryController extends Controller
 
         $query = Category::query();
 
-        if (count($filter) > 0) {
-            $query->where(function ($query) use ($filter) {
-                foreach ($filter as $key => $value) {
-                    $query->orWhere($key, 'ILIKE', '%' . $value . '%');
-                }
-            });
-        }
-
-        $query->offset(($page - 1) * $per_page)
-            ->limit($per_page)
-            ->orderBy($sort_by, $sort_order);
+        $queryProcessor->filter($query, $filter);
+        $queryProcessor->sort($query, $sort_by, $sort_order);
+        $queryProcessor->paginate($query, $page, $per_page);
 
         $categories = $query->get();
 
