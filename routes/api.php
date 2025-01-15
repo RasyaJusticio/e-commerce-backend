@@ -25,6 +25,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api', 'admin-only'
     Route::group(['prefix' => 'products', 'controller' => AdminProductController::class], function () {
         Route::get('', 'index');
         Route::post('', 'store');
+
+        Route::group(['prefix' => '{product}'], function () {
+            Route::get('', 'show');
+        });
     });
 
     Route::group(['prefix' => 'categories', 'controller' => AdminCategoryController::class], function () {
