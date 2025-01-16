@@ -36,7 +36,7 @@ class ProductController extends Controller
         $queryProcessor->sort($query, $sort_by, $sort_order);
         $queryProcessor->paginate($query, $page, $per_page);
 
-        $products = $query->get();
+        $products = $query->with(['categories'])->get();
 
         return $this->jsend_success([
             'products' => $products,
@@ -63,6 +63,8 @@ class ProductController extends Controller
             'stock' => $validatedData['stock'] ?? 0,
         ]);
 
+        $product->load(['categories']);
+
         return $this->jsend_success([
             'product' => $product
         ], 201);
@@ -73,6 +75,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $product->load(['categories']);
+
         return $this->jsend_success([
             'product' => $product
         ]);
@@ -86,6 +90,7 @@ class ProductController extends Controller
         $validatedData = $request->validated();
 
         $product->update($validatedData);
+        $product->load(['categories']);
 
         return $this->jsend_success([
             'product' => $product
