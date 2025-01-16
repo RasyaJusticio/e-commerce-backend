@@ -31,8 +31,10 @@ class ProductImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductImage $productImage, Product $product)
+    public function destroy(Product $product, ProductImage $productImage)
     {
-        //
+        $productImage->delete();
+
+        return $this->jsend_success(null);
     }
 }

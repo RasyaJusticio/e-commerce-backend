@@ -39,6 +39,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api', 'admin-only'
 
             Route::group(['prefix' => 'images', 'controller' => AdminProductImageController::class], function () {
                 Route::post('', 'store');
+                Route::delete('{productImage}', 'destroy');
             });
         });
     });
