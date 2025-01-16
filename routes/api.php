@@ -30,6 +30,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth:api', 'admin-only'
             Route::get('', 'show');
             Route::put('', 'update');
             Route::delete('', 'destroy');
+
+            Route::group(['prefix' => 'category'], function () {
+                Route::put('attach', 'attachCategories');
+                Route::put('detach', 'detachCategories');
+            });
         });
     });
 

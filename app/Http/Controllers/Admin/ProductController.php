@@ -98,7 +98,7 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
 
-        $product->categories()->attach($validatedData['categories']);
+        $product->categories()->syncWithoutDetaching($validatedData['categories']);
 
         $product->load(['categories']);
 
