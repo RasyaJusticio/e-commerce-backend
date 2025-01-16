@@ -27,6 +27,8 @@ class ProductStoreRequest extends BaseFormRequest
             'description' => ['required', 'string', 'min:3', 'max:65535'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['nullable', 'integer', 'min:0'],
+            'categories' => ['nullable', 'array', 'min:1'],
+            'categories.*' => ['integer', 'exists:categories,id'],
         ];
     }
 }

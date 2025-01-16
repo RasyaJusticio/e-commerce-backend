@@ -62,6 +62,7 @@ class ProductController extends Controller
             'price' => $validatedData['price'],
             'stock' => $validatedData['stock'] ?? 0,
         ]);
+        $product->categories()->attach($validatedData['categories']);
 
         $product->load(['categories']);
 
