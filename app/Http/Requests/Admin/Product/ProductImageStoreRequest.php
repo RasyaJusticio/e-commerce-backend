@@ -6,7 +6,7 @@ use App\Http\Requests\BaseFormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
-class ProductStoreRequest extends BaseFormRequest
+class ProductImageStoreRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,7 @@ class ProductStoreRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:512'],
-            'slug' => ['nullable', 'string', 'min:3', 'max:512', 'unique:products,slug'],
-            'description' => ['required', 'string', 'min:3', 'max:65535'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['nullable', 'integer', 'min:0'],
-            'categories' => ['nullable', 'array', 'min:1'],
-            'categories.*' => ['integer', 'exists:categories,id'],
-            'images' => ['nullable', 'array', 'min:1', 'max:7'],
-            'images.*' => [
+            'image' => [
                 'required',
                 File::image()
                     ->max('5mb')
@@ -43,7 +35,7 @@ class ProductStoreRequest extends BaseFormRequest
                             ->maxWidth(2000)
                             ->maxHeight(2000)
                     ),
-            ],
+            ]
         ];
     }
 }
