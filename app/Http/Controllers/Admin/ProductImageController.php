@@ -18,6 +18,12 @@ class ProductImageController extends Controller
      */
     public function store(ProductImageStoreRequest $request, Product $product)
     {
+        if ($product->images()->count() >= 7) {
+            return $this->jsend_fail([
+                'message' => 'Product images limit reached',
+            ], 400);
+        }
+
         $image = $request->file('image');
 
         $path = Storage::disk('public')->putFileAs('products', $image, $image->hashName());
