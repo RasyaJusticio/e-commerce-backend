@@ -4,21 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Traits\JSendResponse;
+use App\Services\QueryProcessor;
+use App\Http\Requests\Admin\Product\ProductAttachCategoryRequest;
+use App\Http\Requests\Admin\Product\ProductDetachCategoryRequest;
 use App\Http\Requests\Admin\Product\ProductIndexRequest;
 use App\Http\Requests\Admin\Product\ProductStoreRequest;
 use App\Http\Requests\Admin\Product\ProductUpdateRequest;
-use App\Services\QueryProcessor;
-use App\Traits\JSendResponse;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
     use JSendResponse;
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(ProductIndexRequest $request)
     {
         $validatedData = $request->validated();
@@ -48,9 +46,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ProductStoreRequest $request)
     {
         $validatedData = $request->validated();
@@ -71,9 +66,6 @@ class ProductController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product)
     {
         $product->load(['categories']);
@@ -83,9 +75,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ProductUpdateRequest $request, Product $product)
     {
         $validatedData = $request->validated();
@@ -98,13 +87,36 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         $product->delete();
 
         return $this->jsend_success(null);
+    }
+
+    public function attachCategories(ProductAttachCategoryRequest $request, Product $product)
+    {
+        $validatedData = $request->validated();
+
+        $product->categories()->attach($validatedData['categories']);
+
+        $product->load(['categories']);
+
+        return $this->jsend_success([
+            'product' => $product
+        ]);
+    }
+
+    public function detachCategories(ProductDetachCategoryRequest $request, Product $product)
+    {
+        $validatedData = $request->validated();
+
+        $product->categories()->detach($validatedData['categories']);
+
+        $product->load(['categories']);
+
+        return $this->jsend_success([
+            'product' => $product
+        ]);
     }
 }
