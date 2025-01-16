@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\Product\ProductDetachCategoryRequest;
 use App\Http\Requests\Admin\Product\ProductIndexRequest;
 use App\Http\Requests\Admin\Product\ProductStoreRequest;
 use App\Http\Requests\Admin\Product\ProductUpdateRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -58,6 +59,16 @@ class ProductController extends Controller
             'stock' => $validatedData['stock'] ?? 0,
         ]);
         $product->categories()->attach($validatedData['categories']);
+
+        if (isset($validatedData['images']) && count($validatedData['images']) > 0) {
+            foreach ($validatedData['images'] as $image) {
+                $path = Storage::disk('public')->putFileAs('products', $image, $image->hashName());
+
+                $product->images()->create([
+                    'path' => $path
+                ]);
+            }
+        }
 
         $product->load(['categories', 'images']);
 

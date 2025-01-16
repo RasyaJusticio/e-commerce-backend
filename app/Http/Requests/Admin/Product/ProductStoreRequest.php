@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin\Product;
 
 use App\Http\Requests\BaseFormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class ProductStoreRequest extends BaseFormRequest
 {
@@ -29,6 +31,19 @@ class ProductStoreRequest extends BaseFormRequest
             'stock' => ['nullable', 'integer', 'min:0'],
             'categories' => ['nullable', 'array', 'min:1'],
             'categories.*' => ['integer', 'exists:categories,id'],
+            'images' => ['nullable', 'array', 'min:1', 'max:7'],
+            'images.*' => [
+                'required',
+                File::image()
+                    ->max('5mb')
+                    ->dimensions(
+                        Rule::dimensions()
+                            ->minWidth(500)
+                            ->minHeight(500)
+                            ->maxWidth(2000)
+                            ->maxHeight(2000)
+                    ),
+            ],
         ];
     }
 }
