@@ -26,9 +26,12 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        $cookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
+        $accessTokenCookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
+        $isLoggedInCookie = cookie('is_logged_in', true, 60 * 24 * 14, null, null, false, false);
 
-        return $this->jsend_success(null, 201)->cookie($cookie);
+        return $this->jsend_success(null, 201)
+            ->cookie($accessTokenCookie)
+            ->cookie($isLoggedInCookie);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -43,9 +46,12 @@ class AuthController extends Controller
 
         $token = Auth::user()->createToken('auth_token')->accessToken;
 
-        $cookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
+        $accessTokenCookie = cookie('access_token', $token, 60 * 24 * 14, null, null, false, true);
+        $isLoggedInCookie = cookie('is_logged_in', true, 60 * 24 * 14, null, null, false, false);
 
-        return $this->jsend_success(null, 200)->cookie($cookie);
+        return $this->jsend_success(null, 200)
+            ->cookie($accessTokenCookie)
+            ->cookie($isLoggedInCookie);
     }
 
     public function logout()
@@ -61,6 +67,8 @@ class AuthController extends Controller
             $token->revoke();
         });
 
-        return $this->jsend_success(null, 200)->withoutCookie('access_token');
+        return $this->jsend_success(null, 200)
+            ->withoutCookie('access_token')
+            ->withoutCookie('is_logged_in');
     }
 }
